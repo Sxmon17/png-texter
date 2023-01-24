@@ -4,9 +4,6 @@ use std::str::{from_utf8, FromStr};
 
 use thiserror::Error;
 
-//use crate::Result;
-
-#[allow(dead_code)]
 #[derive(Clone, Eq, PartialEq, Debug)]
 pub struct ChunkType {
     bytes: [u8; 4],
@@ -66,7 +63,9 @@ impl TryFrom<[u8; 4]> for ChunkType {
         if bytes.iter().all(|&b| Self::is_valid_byte(b)) {
             Ok(Self { bytes })
         } else {
-            Err(ChunkTypeError::NotAscii(bytes.iter().map(|&b| b as char).collect()))
+            Err(ChunkTypeError::NotAscii(
+                bytes.iter().map(|&b| b as char).collect(),
+            ))
         }
     }
 }

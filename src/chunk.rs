@@ -28,7 +28,7 @@ impl Chunk {
 
     /// The length of the data portion of this chunk.
     pub fn length(&self) -> u32 {
-        self.data.len() as u32
+        self.length
     }
 
     /// The `ChunkType` of this chunk
