@@ -1,18 +1,16 @@
-
-
 use std::convert::TryFrom;
 use std::fmt;
 use std::str::FromStr;
+use crc::{Crc, CRC_32_ISO_HDLC};
+use thiserror::Error;
 
-use crate::{Error, Result};
 use crate::chunk_type::ChunkType;
+use crate::{Error, Result};
 
 /// A validated PNG chunk. See the PNG Spec for more details
 /// http://www.libpng.org/pub/png/spec/1.2/PNG-Structure.html
 #[derive(Debug, Clone)]
-#[allow(unused_imports)]
-#[allow(unused_variables)]
-#[allow(dead_code)]
+
 pub struct Chunk {
     length: u32,
     chunk_type: ChunkType,
@@ -22,7 +20,12 @@ pub struct Chunk {
 
 impl Chunk {
     pub fn new(chunk_type: ChunkType, data: Vec<u8>) -> Self {
-        todo!()
+        Self {
+            length: data.len() as u32,
+            crc: Crc::<u32>::new(&CRC_32_ISO_HDLC).checksum(&[&chunk_type.bytes(), data.as_slice()].concat()),
+            chunk_type,
+            data,
+        }
     }
 
     /// The length of the data portion of this chunk.
@@ -48,7 +51,7 @@ impl Chunk {
     /// Returns the data stored in this chunk as a `String`. This function will return an error
     /// if the stored data is not valid UTF-8.
     pub fn data_as_string(&self) -> Result<String> {
-        todo!()
+        Ok(String::from_utf8(self.data.clone())?)
     }
 
     /// Returns this chunk as a byte sequences described by the PNG spec.
@@ -58,7 +61,7 @@ impl Chunk {
     /// 3. The data itself *(`length` bytes)*
     /// 4. The CRC of the chunk type and data *(4 bytes)*
     pub fn as_bytes(&self) -> Vec<u8> {
-        todo!()
+        self.data.clone()
     }
 }
 
@@ -73,7 +76,7 @@ impl TryFrom<&[u8]> for Chunk {
             bytes[(8 + length as usize + 2)],
             bytes[(8 + length as usize + 3)],
         ]);
-        
+
         Ok(Chunk {
             length,
             chunk_type: ChunkType::from_str(&String::from_utf8_lossy(&bytes[4..8]))?,
