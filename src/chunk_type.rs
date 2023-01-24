@@ -1,11 +1,9 @@
-#[allow(dead_code)]
 pub mod chunk_type {
-use std::convert::TryFrom;
-use std::fmt;
+    use std::convert::TryFrom;
+    use std::fmt;
     use std::str::FromStr;
-    //use std::str::FromStr;
-use crate::{Error, Result};
 
+    use crate::{Error, Result};
 
     #[derive(Clone, Eq, PartialEq, Debug)]
     struct ChunkType {
@@ -65,7 +63,7 @@ use crate::{Error, Result};
 
     impl fmt::Display for ChunkType {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            todo!()
+            write!(f, "{}", std::str::from_utf8(&self.bytes).map_err(|_| std::fmt::Error)?)
         }
     }
 
@@ -83,8 +81,9 @@ use crate::{Error, Result};
 
     #[cfg(test)]
     mod tests {
-        use super::*;
         pub use std::{assert_eq, format};
+
+        use super::*;
 
         #[test]
         pub fn test_chunk_type_from_bytes() {
@@ -99,6 +98,7 @@ use crate::{Error, Result};
             let actual = ChunkType::from_str("RuSt").unwrap();
             assert_eq!(expected, actual);
         }
+
         #[test]
         pub fn test_chunk_type_is_critical() {
             let chunk = ChunkType::from_str("RuSt").unwrap();
@@ -110,6 +110,7 @@ use crate::{Error, Result};
             let chunk = ChunkType::from_str("ruSt").unwrap();
             assert!(!chunk.is_critical());
         }
+
         #[test]
         pub fn test_chunk_type_is_public() {
             let chunk = ChunkType::from_str("RUSt").unwrap();
