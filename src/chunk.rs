@@ -2,10 +2,10 @@ use crc::{Crc, CRC_32_ISO_HDLC};
 use std::convert::TryFrom;
 use std::fmt;
 use std::str::FromStr;
+use std::string::FromUtf8Error;
 use thiserror::Error;
 
 use crate::chunk_type::ChunkType;
-use crate::{Error, Result};
 
 #[derive(Debug, Clone)]
 pub struct Chunk {
@@ -48,8 +48,8 @@ impl Chunk {
 
     /// Returns the data stored in this chunk as a `String`. This function will return an error
     /// if the stored data is not valid UTF-8.
-    pub fn data_as_string(&self) -> Result<String> {
-        Ok(String::from_utf8(self.data.clone())?)
+    pub fn data_as_string(&self) -> Result<String, FromUtf8Error> {
+        String::from_utf8(self.data.clone())
     }
 
     /// Returns this chunk as a byte sequences described by the PNG spec.
@@ -63,10 +63,16 @@ impl Chunk {
     }
 }
 
-impl TryFrom<&[u8]> for Chunk {
-    type Error = Error;
+#[derive(Error, Debug)]
+pub enum ChunkError {
+    #[error("crc checksums not lining up")]
+    ChecksumInvalid(String),
+}
 
-    fn try_from(bytes: &[u8]) -> Result<Self> {
+impl TryFrom<&[u8]> for Chunk {
+    type Error = ChunkError;
+
+    fn try_from(bytes: &[u8]) -> Result<Self, ChunkError> {
         let length = u32::from_be_bytes([bytes[0], bytes[1], bytes[2], bytes[3]]);
         let crc = u32::from_be_bytes([
             bytes[(8 + length as usize)],
@@ -75,9 +81,13 @@ impl TryFrom<&[u8]> for Chunk {
             bytes[(8 + length as usize + 3)],
         ]);
 
-        Ok(Chunk {
+        if crc != Crc::<u32>::new(&CRC_32_ISO_HDLC).checksum(&bytes[4..(8 + length as usize)]) {
+            return Err(ChunkError::ChecksumInvalid(String::from("invalid crc")));
+        }
+
+        Ok(Self {
             length,
-            chunk_type: ChunkType::from_str(&String::from_utf8_lossy(&bytes[4..8]))?,
+            chunk_type: ChunkType::from_str(&String::from_utf8_lossy(&bytes[4..8])).unwrap(),
             data: bytes[8..(8 + length as usize)].to_vec(),
             crc,
         })
