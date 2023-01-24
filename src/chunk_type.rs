@@ -20,28 +20,29 @@ use crate::{Error, Result};
 
         /// Returns the property state of the first byte as described in the PNG spec
         pub fn is_critical(&self) -> bool {
-            todo!()
+            (self.bytes[0] & 0x20) != 0x20
         }
 
-        /// Returns the property state of the second byte as described in the PNG spec
-        pub fn is_public(&self) -> bool {
-            todo!()
+        /// A type code is public if bit 5 (value 32) of the second byte is 0
+        fn is_public(&self) -> bool {
+            (self.bytes[1] & 0x20) != 0x20
         }
 
-        /// Returns the property state of the third byte as described in the PNG spec
-        pub fn is_reserved_bit_valid(&self) -> bool {
-            todo!()
+        /// Bit 5 of the third byte is reserved and must be 0
+        fn is_reserved_bit_valid(&self) -> bool {
+            (self.bytes[2] & 0x20) != 0x20
         }
 
-        /// Returns the property state of the fourth byte as described in the PNG spec
-        pub fn is_safe_to_copy(&self) -> bool {
-            todo!()
+        /// A type code is safe to copy if bit 5 (value 32) of the fourth byte is 1
+        fn is_safe_to_copy(&self) -> bool {
+            (self.bytes[3] & 0x20) == 0x20
         }
 
         /// Returns true if the reserved byte is valid and all four bytes are represented by the characters A-Z or a-z.
         /// Note that this chunk type should always be valid as it is validated during construction.
         pub fn is_valid(&self) -> bool {
-            todo!()
+            self.is_reserved_bit_valid()
+                && self.bytes.iter().all(|&b| Self::is_valid_byte(b))
         }
 
         /// Valid bytes are represented by the characters A-Z or a-z
