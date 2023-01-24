@@ -73,7 +73,10 @@ use crate::{Error, Result};
         type Err = Error;
 
         fn from_str(s: &str) -> Result<Self> {
-            todo!()
+            if s.as_bytes().len() != 4 {
+                return Err(format!("Invalid string length {}", s).into());
+            }
+            Ok(Self::try_from([s.as_bytes()[0], s.as_bytes()[1], s.as_bytes()[2], s.as_bytes()[3]])?)
         }
     }
 
@@ -91,7 +94,6 @@ use crate::{Error, Result};
         }
 
         #[test]
-        #[ignore]
         pub fn test_chunk_type_from_str() {
             let expected = ChunkType::try_from([82, 117, 83, 116]).unwrap();
             let actual = ChunkType::from_str("RuSt").unwrap();
