@@ -1,16 +1,13 @@
+use crc::{Crc, CRC_32_ISO_HDLC};
 use std::convert::TryFrom;
 use std::fmt;
 use std::str::FromStr;
-use crc::{Crc, CRC_32_ISO_HDLC};
 use thiserror::Error;
 
 use crate::chunk_type::ChunkType;
 use crate::{Error, Result};
 
-/// A validated PNG chunk. See the PNG Spec for more details
-/// http://www.libpng.org/pub/png/spec/1.2/PNG-Structure.html
 #[derive(Debug, Clone)]
-
 pub struct Chunk {
     length: u32,
     chunk_type: ChunkType,
@@ -22,7 +19,8 @@ impl Chunk {
     pub fn new(chunk_type: ChunkType, data: Vec<u8>) -> Self {
         Self {
             length: data.len() as u32,
-            crc: Crc::<u32>::new(&CRC_32_ISO_HDLC).checksum(&[&chunk_type.bytes(), data.as_slice()].concat()),
+            crc: Crc::<u32>::new(&CRC_32_ISO_HDLC)
+                .checksum(&[&chunk_type.bytes(), data.as_slice()].concat()),
             chunk_type,
             data,
         }

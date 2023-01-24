@@ -1,8 +1,10 @@
 use std::convert::TryFrom;
 use std::fmt;
-use std::str::FromStr;
+use std::str::{from_utf8, FromStr};
 
-use crate::{Error, Result};
+use thiserror::Error;
+
+//use crate::Result;
 
 #[allow(dead_code)]
 #[derive(Clone, Eq, PartialEq, Debug)]
@@ -48,14 +50,23 @@ impl ChunkType {
     }
 }
 
-impl TryFrom<[u8; 4]> for ChunkType {
-    type Error = Error;
+#[derive(Error, Debug)]
+pub enum ChunkTypeError {
+    #[error("invalid byte length (expected {expected:?}, found {found:?})")]
+    ByteLength { expected: String, found: String },
 
-    fn try_from(bytes: [u8; 4]) -> Result<Self> {
+    #[error("`{0}` is not a ascii uppercase or lowercase character")]
+    NotAscii(String),
+}
+
+impl TryFrom<[u8; 4]> for ChunkType {
+    type Error = ChunkTypeError;
+
+    fn try_from(bytes: [u8; 4]) -> Result<Self, ChunkTypeError> {
         if bytes.iter().all(|&b| Self::is_valid_byte(b)) {
             Ok(Self { bytes })
         } else {
-            Err(format!("Invalid chunk type: {bytes:?}").into())
+            Err(ChunkTypeError::NotAscii(bytes.iter().map(|&b| b as char).collect()))
         }
     }
 }
@@ -65,24 +76,28 @@ impl fmt::Display for ChunkType {
         write!(
             f,
             "{}",
-            std::str::from_utf8(&self.bytes).map_err(|_| std::fmt::Error)?
+            from_utf8(&self.bytes).map_err(|_| std::fmt::Error)?
         )
     }
 }
 
 impl FromStr for ChunkType {
-    type Err = Error;
+    type Err = ChunkTypeError;
 
-    fn from_str(s: &str) -> Result<Self> {
-        if s.as_bytes().len() != 4 {
-            return Err(format!("Invalid string length {s}").into());
+    fn from_str(s: &str) -> Result<Self, ChunkTypeError> {
+        if s.as_bytes().len() == 4 {
+            Ok(Self::try_from([
+                s.as_bytes()[0],
+                s.as_bytes()[1],
+                s.as_bytes()[2],
+                s.as_bytes()[3],
+            ])?)
+        } else {
+            Err(ChunkTypeError::ByteLength {
+                expected: "4".to_string(),
+                found: s.as_bytes().len().to_string(),
+            })
         }
-        Self::try_from([
-            s.as_bytes()[0],
-            s.as_bytes()[1],
-            s.as_bytes()[2],
-            s.as_bytes()[3],
-        ])
     }
 }
 
