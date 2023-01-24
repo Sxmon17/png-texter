@@ -4,8 +4,9 @@ use std::str::FromStr;
 
 use crate::{Error, Result};
 
+#[allow(dead_code)]
 #[derive(Clone, Eq, PartialEq, Debug)]
-struct ChunkType {
+pub struct ChunkType {
     bytes: [u8; 4],
 }
 
@@ -35,8 +36,8 @@ impl ChunkType {
         (self.bytes[3] & 0x20) == 0x20
     }
 
-/// Returns true if the reserved byte is valid and all four bytes are represented by the characters A-Z or a-z.
-/// Note that this chunk type should always be valid as it is validated during construction.
+    /// Returns true if the reserved byte is valid and all four bytes are represented by the characters A-Z or a-z.
+    /// Note that this chunk type should always be valid as it is validated during construction.
     pub fn is_valid(&self) -> bool {
         self.is_reserved_bit_valid() && self.bytes.iter().all(|&b| Self::is_valid_byte(b))
     }
