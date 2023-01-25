@@ -3,7 +3,8 @@ use std::convert::TryFrom;
 use std::fmt;
 use std::str::FromStr;
 use std::string::FromUtf8Error;
-use thiserror::Error;
+
+use crate::error::ChunkError;
 
 use crate::chunk_type::ChunkType;
 
@@ -63,33 +64,30 @@ impl Chunk {
     }
 }
 
-#[derive(Error, Debug)]
-pub enum ChunkError {
-    #[error("crc checksums not lining up")]
-    ChecksumInvalid(String),
-}
-
 impl TryFrom<&[u8]> for Chunk {
     type Error = ChunkError;
 
     fn try_from(bytes: &[u8]) -> Result<Self, ChunkError> {
         let length = u32::from_be_bytes([bytes[0], bytes[1], bytes[2], bytes[3]]);
-        let crc = u32::from_be_bytes([
+        let found_crc = u32::from_be_bytes([
             bytes[(8 + length as usize)],
             bytes[(8 + length as usize + 1)],
             bytes[(8 + length as usize + 2)],
             bytes[(8 + length as usize + 3)],
         ]);
 
-        if crc != Crc::<u32>::new(&CRC_32_ISO_HDLC).checksum(&bytes[4..(8 + length as usize)]) {
-            return Err(ChunkError::ChecksumInvalid(String::from("invalid crc")));
+        let expected_crc = Crc::<u32>::new(&CRC_32_ISO_HDLC)
+            .checksum(&[&bytes[4..8], &bytes[8..(8 + length as usize)]].concat());
+
+        if expected_crc != found_crc {
+            return Err(ChunkError::InvalidCrc { expected: expected_crc.to_string(), found: found_crc.to_string() });
         }
 
         Ok(Self {
             length,
             chunk_type: ChunkType::from_str(&String::from_utf8_lossy(&bytes[4..8])).unwrap(),
             data: bytes[8..(8 + length as usize)].to_vec(),
-            crc,
+            crc: found_crc,
         })
     }
 }

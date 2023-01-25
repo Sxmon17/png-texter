@@ -2,7 +2,7 @@ use std::convert::TryFrom;
 use std::fmt;
 use std::str::{from_utf8, FromStr};
 
-use thiserror::Error;
+use crate::error::ChunkTypeError;
 
 #[derive(Clone, Eq, PartialEq, Debug)]
 pub struct ChunkType {
@@ -45,15 +45,6 @@ impl ChunkType {
     fn is_valid_byte(byte: u8) -> bool {
         byte.is_ascii_lowercase() || byte.is_ascii_uppercase()
     }
-}
-
-#[derive(Error, Debug)]
-pub enum ChunkTypeError {
-    #[error("invalid byte length (expected {expected:?}, found {found:?})")]
-    ByteLength { expected: String, found: String },
-
-    #[error("`{0}` is not a ascii uppercase or lowercase character")]
-    NotAscii(String),
 }
 
 impl TryFrom<[u8; 4]> for ChunkType {

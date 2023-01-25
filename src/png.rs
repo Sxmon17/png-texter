@@ -7,7 +7,7 @@ use std::str::FromStr;
 
 use crate::chunk::Chunk;
 use crate::chunk_type::ChunkType;
-use crate::{Error, Result};
+use crate::error::ChunkError;
 
 /// A PNG container as described by the PNG spec
 /// http://www.libpng.org/pub/png/spec/1.2/PNG-Contents.html
@@ -26,7 +26,7 @@ impl Png {
     }
 
     /// Creates a `Png` from a file path
-    pub fn from_file<P: AsRef<Path>>(path: P) -> Result<Self> {
+    pub fn from_file<P: AsRef<Path>>(path: P) -> Result<Self, std::io::Error> {
         let file = fs::File::open(path)?;
         let mut reader = BufReader::new(file);
         let mut bytes = Vec::new();
@@ -41,12 +41,12 @@ impl Png {
 
     /// Searches for a `Chunk` with the specified `chunk_type` and removes the first
     /// matching `Chunk` from this `Png` list of chunks.
-    pub fn remove_chunk(&mut self, chunk_type: &str) -> Result<Chunk> {
+    pub fn remove_chunk(&mut self, chunk_type: &str) -> Result<Chunk, ChunkError> {
         let index = self
             .chunks
             .iter()
             .position(|chunk| chunk.chunk_type().to_string() == chunk_type)
-            .ok_or(Error::ChunkNotFound)?;
+            .ok_or(ChunkError::ChunkNotFound(chunk_type.to_string()))?;
         Ok(self.chunks.remove(index))
     }
 
@@ -79,9 +79,9 @@ impl Png {
 }
 
 impl TryFrom<&[u8]> for Png {
-    type Error = Error;
+    type Error = std::io::Error;
 
-    fn try_from(bytes: &[u8]) -> Result<Png> {
+    fn try_from(bytes: &[u8]) -> Result<Png, std::io::Error> {
         //if bytes[0..8] != Png::STANDARD_HEADER {
         //    return Err(Error::InvalidHeader);
         //}
@@ -100,6 +100,7 @@ mod tests {
     use super::*;
     use crate::chunk::Chunk;
     use crate::chunk_type::ChunkType;
+    use crate::error::ChunkTypeError;
     use std::convert::TryFrom;
     use std::str::FromStr;
 
@@ -118,7 +119,7 @@ mod tests {
         Png::from_chunks(chunks)
     }
 
-    fn chunk_from_strings(chunk_type: &str, data: &str) -> Result<Chunk> {
+    fn chunk_from_strings(chunk_type: &str, data: &str) -> Result<Chunk, ChunkTypeError> {
         let chunk_type = ChunkType::from_str(chunk_type)?;
         let data: Vec<u8> = data.bytes().collect();
 
