@@ -1,5 +1,6 @@
 use std::convert::TryFrom;
 use std::fmt;
+use std::fmt::Error;
 use std::fs;
 use std::io::{BufReader, Read};
 use std::path::Path;
@@ -7,7 +8,7 @@ use std::str::FromStr;
 
 use crate::chunk::Chunk;
 use crate::chunk_type::ChunkType;
-use crate::error::ChunkError;
+use crate::error::{ChunkError, PngError};
 
 /// A PNG container as described by the PNG spec
 /// http://www.libpng.org/pub/png/spec/1.2/PNG-Contents.html
@@ -26,7 +27,7 @@ impl Png {
     }
 
     /// Creates a `Png` from a file path
-    pub fn from_file<P: AsRef<Path>>(path: P) -> Result<Self, std::io::Error> {
+    pub fn from_file<P: AsRef<Path>>(path: P) -> Result<Self, PngError> {
         let file = fs::File::open(path)?;
         let mut reader = BufReader::new(file);
         let mut bytes = Vec::new();
@@ -79,13 +80,25 @@ impl Png {
 }
 
 impl TryFrom<&[u8]> for Png {
-    type Error = std::io::Error;
+    type Error = PngError;
 
-    fn try_from(bytes: &[u8]) -> Result<Png, std::io::Error> {
-        //if bytes[0..8] != Png::STANDARD_HEADER {
-        //    return Err(Error::InvalidHeader);
-        //}
-        todo!()
+    fn try_from(bytes: &[u8]) -> Result<Png, PngError> {
+        if bytes[0..8] != Png::STANDARD_HEADER {
+            return Err(PngError::InvalidSignature {
+                expected: String::from_utf8_lossy(&Png::STANDARD_HEADER).to_string(),
+                found: String::from_utf8_lossy(&bytes[0..8]).to_string(),
+            });
+        }
+
+        let mut cur: usize = 8;
+        let mut chunks: Vec<Chunk> = Vec::new();
+
+        while cur < bytes.len() {
+            let chunk = Chunk::try_from(&bytes[cur..]);
+            cur += chunk.as_ref().unwrap().length() as usize + 12;
+            chunks.push(chunk?);
+        }
+        Ok(Png::from_chunks(chunks))
     }
 }
 

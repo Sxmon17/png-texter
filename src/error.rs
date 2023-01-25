@@ -17,3 +17,12 @@ pub enum ChunkError {
     #[error("{0} not found")]
     ChunkNotFound(String),
 }
+
+#[derive(Error, Debug)]
+pub enum PngError {
+    #[error("invalid PNG signature (expected {expected:?}, found {found:?})")]
+    InvalidSignature { expected: String, found: String },
+
+    #[error(transparent)]
+    Io(#[from] std::io::Error),
+}
