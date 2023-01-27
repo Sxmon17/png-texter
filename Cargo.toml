@@ -1,5 +1,5 @@
 [package]
-name = "png_crypthide"
+name = "png-texter"
 version = "0.1.0"
 edition = "2021"
 
@@ -7,5 +7,6 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1.0.68"
+byteorder = "1.4.3"
 crc = "3.0.0"
 thiserror = "1.0.38"

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/png_crypthide.iml" filepath="$PROJECT_DIR$/.idea/png_crypthide.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/png-texter.iml" filepath="$PROJECT_DIR$/.idea/png-texter.iml" />
     </modules>
   </component>
 </project>

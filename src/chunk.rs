@@ -1,8 +1,10 @@
 use crc::{Crc, CRC_32_ISO_HDLC};
 use std::convert::TryFrom;
 use std::fmt;
+use std::hash::Hash;
 use std::str::FromStr;
 use std::string::FromUtf8Error;
+use byteorder::{BigEndian, ReadBytesExt};
 
 use crate::error::ChunkError;
 
@@ -10,16 +12,17 @@ use crate::chunk_type::ChunkType;
 
 #[derive(Debug, Clone)]
 pub struct Chunk {
-    length: u32,
     chunk_type: ChunkType,
     data: Vec<u8>,
+    length: u32,
     crc: u32,
 }
 
 impl Chunk {
     pub fn new(chunk_type: ChunkType, data: Vec<u8>) -> Self {
+        dbg!(&data);
         Self {
-            length: data.len() as u32,
+            length,
             crc: Crc::<u32>::new(&CRC_32_ISO_HDLC)
                 .checksum(&[&chunk_type.bytes(), data.as_slice()].concat()),
             chunk_type,
@@ -123,6 +126,7 @@ mod tests {
             .chain(crc.to_be_bytes().iter())
             .copied()
             .collect();
+        dbg!(&chunk_data);
         Chunk::try_from(chunk_data.as_ref()).unwrap()
     }
 
@@ -205,7 +209,6 @@ mod tests {
             .chain(crc.to_be_bytes().iter())
             .copied()
             .collect();
-
         let chunk = Chunk::try_from(chunk_data.as_ref());
 
         assert!(chunk.is_err());
