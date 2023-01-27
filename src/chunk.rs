@@ -22,7 +22,7 @@ impl Chunk {
     pub fn new(chunk_type: ChunkType, data: Vec<u8>) -> Self {
         dbg!(&data);
         Self {
-            length,
+            length: data.len() as u32,
             crc: Crc::<u32>::new(&CRC_32_ISO_HDLC)
                 .checksum(&[&chunk_type.bytes(), data.as_slice()].concat()),
             chunk_type,
@@ -63,7 +63,12 @@ impl Chunk {
     /// 3. The data itself *(`length` bytes)*
     /// 4. The CRC of the chunk type and data *(4 bytes)*
     pub fn as_bytes(&self) -> Vec<u8> {
-        self.data.clone()
+        [
+            self.length.to_be_bytes().as_ref(),
+            self.chunk_type.bytes().as_ref(),
+            self.data.as_slice(),
+            self.crc.to_be_bytes().as_ref(),
+        ].concat()
     }
 }
 

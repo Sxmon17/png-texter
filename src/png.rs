@@ -90,21 +90,27 @@ impl TryFrom<&[u8]> for Png {
             });
         }
 
-        let mut cur: usize = 8;
+        let mut cursor = 8;
         let mut chunks: Vec<Chunk> = Vec::new();
 
-        while cur < bytes.len() {
-            let chunk = Chunk::try_from(&bytes[cur..]);
-            cur += chunk.as_ref().unwrap().length() as usize + 12;
-            chunks.push(chunk.unwrap());
+        while cursor < bytes.len() {
+            let length = u32::from_be_bytes(bytes[cursor..cursor + 4].try_into().unwrap()) as usize;
+            let offset = length + 12;
+            chunks.push(bytes[cursor..cursor + offset].try_into().unwrap());
+            cursor += offset;
         }
+
         Ok(Png::from_chunks(chunks))
     }
 }
 
 impl fmt::Display for Png {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        todo!()
+        write!(f, "Png {{ chunks: [")?;
+        for chunk in &self.chunks {
+            write!(f, "{}, ", chunk)?;
+        }
+        write!(f, "] }}")
     }
 }
 
@@ -253,7 +259,6 @@ mod tests {
     }
 
     #[test]
-    #[ignore]
     fn test_png_trait_impls() {
         let chunk_bytes: Vec<u8> = testing_chunks()
             .into_iter()
