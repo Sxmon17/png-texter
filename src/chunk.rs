@@ -1,15 +1,14 @@
 use crc::{Crc, CRC_32_ISO_HDLC};
 use std::convert::TryFrom;
 use std::fmt;
-use std::hash::Hash;
 use std::str::FromStr;
 use std::string::FromUtf8Error;
-use byteorder::{BigEndian, ReadBytesExt};
 
 use crate::error::ChunkError;
 
 use crate::chunk_type::ChunkType;
 
+#[allow(dead_code)]
 #[derive(Debug, Clone)]
 pub struct Chunk {
     chunk_type: ChunkType,

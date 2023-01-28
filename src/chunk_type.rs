@@ -4,6 +4,7 @@ use std::str::{from_utf8, FromStr};
 
 use crate::error::ChunkTypeError;
 
+#[allow(dead_code)]
 #[derive(Clone, Eq, PartialEq, Debug)]
 pub struct ChunkType {
     bytes: [u8; 4],

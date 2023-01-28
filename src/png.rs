@@ -10,6 +10,7 @@ use crate::chunk::Chunk;
 use crate::chunk_type::ChunkType;
 use crate::error::{ChunkError, PngError};
 
+#[allow(dead_code)]
 /// A PNG container as described by the PNG spec
 /// http://www.libpng.org/pub/png/spec/1.2/PNG-Contents.html
 #[derive(Debug)]
