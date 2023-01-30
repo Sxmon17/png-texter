@@ -19,7 +19,6 @@ pub struct Chunk {
 
 impl Chunk {
     pub fn new(chunk_type: ChunkType, data: Vec<u8>) -> Self {
-        dbg!(&data);
         Self {
             length: data.len() as u32,
             crc: Crc::<u32>::new(&CRC_32_ISO_HDLC)
@@ -67,7 +66,8 @@ impl Chunk {
             self.chunk_type.bytes().as_ref(),
             self.data.as_slice(),
             self.crc.to_be_bytes().as_ref(),
-        ].concat()
+        ]
+        .concat()
     }
 }
 
@@ -87,7 +87,10 @@ impl TryFrom<&[u8]> for Chunk {
             .checksum(&[&bytes[4..8], &bytes[8..(8 + length as usize)]].concat());
 
         if expected_crc != found_crc {
-            return Err(ChunkError::InvalidCrc { expected: expected_crc.to_string(), found: found_crc.to_string() });
+            return Err(ChunkError::InvalidCrc {
+                expected: expected_crc.to_string(),
+                found: found_crc.to_string(),
+            });
         }
 
         Ok(Self {

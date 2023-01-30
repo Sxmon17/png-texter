@@ -27,4 +27,3 @@ pub enum Commands {
         secret_msg: Option<String>,
     },
 }
-

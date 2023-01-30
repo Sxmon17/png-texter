@@ -12,7 +12,7 @@ pub enum ChunkTypeError {
 #[derive(Error, Debug)]
 pub enum ChunkError {
     #[error("Checksums do not match (expected {expected:?}, found {found:?})")]
-    InvalidCrc{ expected: String, found: String },
+    InvalidCrc { expected: String, found: String },
 
     #[error("{0} not found")]
     ChunkNotFound(String),
@@ -25,4 +25,7 @@ pub enum PngError {
 
     #[error(transparent)]
     Io(#[from] std::io::Error),
+
+    #[error(transparent)]
+    ChunkType(#[from] ChunkTypeError),
 }
