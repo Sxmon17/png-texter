@@ -1,16 +1,12 @@
 use std::convert::TryFrom;
 use std::fmt;
-use std::fmt::Error;
 use std::fs;
 use std::io::{BufReader, Read};
 use std::path::Path;
-use std::str::FromStr;
 
 use crate::chunk::Chunk;
-use crate::chunk_type::ChunkType;
 use crate::error::{ChunkError, PngError};
 
-#[allow(dead_code)]
 /// A PNG container as described by the PNG spec
 /// http://www.libpng.org/pub/png/spec/1.2/PNG-Contents.html
 #[derive(Debug)]
@@ -19,7 +15,6 @@ pub struct Png {
 }
 
 impl Png {
-    // Fill in this array with the correct values per the PNG spec
     pub const STANDARD_HEADER: [u8; 8] = [137, 80, 78, 71, 13, 10, 26, 10];
 
     /// Creates a `Png` from a list of chunks using the correct header
@@ -36,13 +31,10 @@ impl Png {
         Self::try_from(&bytes[..])
     }
 
-    /// Appends a chunk to the end of this `Png` file's `Chunk` list.
     pub fn append_chunk(&mut self, chunk: Chunk) {
         self.chunks.push(chunk);
     }
 
-    /// Searches for a `Chunk` with the specified `chunk_type` and removes the first
-    /// matching `Chunk` from this `Png` list of chunks.
     pub fn remove_chunk(&mut self, chunk_type: &str) -> Result<Chunk, ChunkError> {
         let index = self
             .chunks
@@ -52,18 +44,14 @@ impl Png {
         Ok(self.chunks.remove(index))
     }
 
-    /// The header of this PNG.
     pub fn header(&self) -> &[u8; 8] {
         &Png::STANDARD_HEADER
     }
 
-    /// Lists the `Chunk`s stored in this `Png`
     pub fn chunks(&self) -> &[Chunk] {
         &self.chunks
     }
 
-    /// Searches for a `Chunk` with the specified `chunk_type` and returns the first
-    /// matching `Chunk` from this `Png`.
     pub fn chunk_by_type(&self, chunk_type: &str) -> Option<&Chunk> {
         self.chunks
             .iter()
@@ -109,7 +97,7 @@ impl fmt::Display for Png {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "Png {{ chunks: [")?;
         for chunk in &self.chunks {
-            write!(f, "{}, ", chunk)?;
+            write!(f, "{chunk}, ")?;
         }
         write!(f, "] }}")
     }

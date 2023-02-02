@@ -6,11 +6,8 @@ mod error;
 mod png;
 
 use crate::args::{Args, Commands};
-use crate::chunk_type::ChunkType;
 use crate::commands::*;
-use crate::png::Png;
 use clap::Parser;
-use std::str::FromStr;
 
 fn main() {
     let cli = Args::parse();
@@ -30,6 +27,9 @@ fn main() {
         }
         Some(Commands::Decode { png, chunk_type }) => {
             decode(png.as_ref().unwrap(), chunk_type.as_ref().unwrap()).unwrap();
+        }
+        Some(Commands::Remove { png, chunk_type }) => {
+            remove(png.as_ref().unwrap(), chunk_type.as_ref().unwrap()).unwrap();
         }
         None => {
             println!("No subcommand was used");
