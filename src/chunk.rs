@@ -12,7 +12,7 @@ use crate::chunk_type::ChunkType;
 #[derive(Debug, Clone)]
 pub struct Chunk {
     chunk_type: ChunkType,
-    data: Vec<u8>,
+    pub(crate) data: Vec<u8>,
     length: u32,
     crc: u32,
 }

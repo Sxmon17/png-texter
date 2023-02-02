@@ -26,4 +26,11 @@ pub enum Commands {
         #[arg(index = 3, value_name = "SECRET_MSG")]
         secret_msg: Option<String>,
     },
+    Decode {
+        #[arg(index = 1, value_name = "FILE")]
+        png: Option<PathBuf>,
+
+        #[arg(index = 2, value_name = "CHUNK_TYPE")]
+        chunk_type: Option<String>,
+    },
 }

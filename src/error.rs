@@ -28,4 +28,7 @@ pub enum PngError {
 
     #[error(transparent)]
     ChunkType(#[from] ChunkTypeError),
+
+    #[error(transparent)]
+    Utf8(#[from] std::str::Utf8Error),
 }
