@@ -4,10 +4,10 @@ A CLI tool to hide encrypted messages in a .png file written in rust
 ## Usage 👾
 
 ```
-Usage: png-texter [COMMAND]
+Usage: png-texter [COMMAND] [FILE] [CHUNKTYPE]
 
 Commands:
-  encode
+  encode  
   decode
   remove
   help    Print this message or the help of the given subcommand(s)
