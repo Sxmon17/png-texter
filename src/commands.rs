@@ -29,8 +29,6 @@ pub fn decode<S: AsRef<Path>>(input: S, chunk_type: &str) -> Result<String, PngE
     let chunk = png.chunk_by_type(chunk_type).unwrap();
     let msg = String::from_utf8(chunk.data.clone()).unwrap();
 
-    println!("{msg}");
-
     Ok(msg)
 }
 

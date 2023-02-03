@@ -25,9 +25,11 @@ fn main() {
                 secret_msg.as_ref().unwrap(),
             )
             .expect("Error while encoding");
+            println!("Encoded successfully")
         }
         Some(Commands::Decode { png }) => {
-            decode(png.as_ref().unwrap(), chunk_type.unwrap()).unwrap();
+            let msg = decode(png.as_ref().unwrap(), chunk_type.unwrap()).unwrap();
+            println!("Decoded successfully with message: {}", msg);
         }
         Some(Commands::Remove { png }) => {
             remove(png.as_ref().unwrap(), chunk_type.unwrap()).unwrap();
