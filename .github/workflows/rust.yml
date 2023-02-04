@@ -46,7 +46,7 @@ jobs:
             rust: nightly
             benches: true
             
-              deploy:
+deploy:
     name: deploy
     needs: [test]
     if: startsWith(github.ref, 'refs/tags/')
