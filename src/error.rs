@@ -27,6 +27,9 @@ pub enum PngError {
     Io(#[from] std::io::Error),
 
     #[error(transparent)]
+    Chunk(#[from] ChunkError),
+
+    #[error(transparent)]
     ChunkType(#[from] ChunkTypeError),
 
     #[error(transparent)]
