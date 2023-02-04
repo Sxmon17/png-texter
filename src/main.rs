@@ -5,11 +5,11 @@ mod commands;
 mod error;
 mod png;
 
-use std::path::PathBuf;
 use crate::args::{Args, Commands};
 use crate::commands::*;
 use clap::error::{DefaultFormatter, Error, ErrorFormatter, ErrorKind};
 use clap::Parser;
+use std::path::PathBuf;
 
 fn main() {
     let cli = Args::parse();
