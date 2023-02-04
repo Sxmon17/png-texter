@@ -20,4 +20,22 @@ Options:
   -V, --version                  Print version
 ```
 
-If you find a bug or have an idea for a new feature, please open an issue or submit a pull request.
+## Examples 🔬
+
+![image](https://user-images.githubusercontent.com/65186979/216777155-6683d182-97c2-45d5-8635-0ea5d19a815f.png)
+
+
+### Encode
+
+      ~/png-texter -c "rust" encode -o "png_tests/encoded.png"  png_tests/example.png "Hello User!"
+
+### Decode
+
+      ~/png-texter -c "rust" decode png_tests/encoded.png
+      
+### Remove
+      
+      ~/png-texter remove png_tests/encoded.png
+
+
+#### If you find a bug or have an idea for a new feature, please open an issue or submit a pull request.
