@@ -3,6 +3,8 @@ A CLI tool to hide encrypted messages in a .png file written in rust
    
 ## Usage 👾
 
+### ~/png-texter help
+
 ```
 A simple png chunk message encoder/decoder
 
@@ -20,9 +22,41 @@ Options:
   -V, --version                  Print version
 ```
 
+### ~/png-texter help encode
+
+
+```
+encode the png with a secret message
+
+Usage: png-texter encode [OPTIONS] [FILE] [SECRET_MSG]
+
+Arguments:
+  [FILE]        Png to encode
+  [SECRET_MSG]  Secret message to encode within the png
+
+Options:
+  -o, --output <output>  Output png
+  -h, --help             Print help
+```
+
+### ~/png-texter help decode
+```
+decode the png to get the secret message
+
+Usage: png-texter decode [FILE]
+
+Arguments:
+  [FILE]  Png to decode
+
+Options:
+  -h, --help  Print help
+
+```
+
 ## Examples 🔬
 
 ![image](https://user-images.githubusercontent.com/65186979/216777155-6683d182-97c2-45d5-8635-0ea5d19a815f.png)
+
 
 
 ### Encode
