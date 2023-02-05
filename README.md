@@ -24,7 +24,6 @@ A CLI tool to hide encrypted messages in a .png file written in rust
 </details>
 
 </br>
-</br>
 
 ## ~/png-texter help
 ```
