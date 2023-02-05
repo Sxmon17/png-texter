@@ -3,7 +3,13 @@ A CLI tool to hide encrypted messages in a .png file written in rust
    
 ## Usage 👾
 
-### ~/png-texter help
+### Linux 🐧
+
+#### ~/png-texter help
+
+### Windows 🪟
+
+#### C:\png-texter.exe help
 
 ```
 A simple png chunk message encoder/decoder
