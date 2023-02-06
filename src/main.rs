@@ -30,10 +30,6 @@ fn main() {
             url,
             output,
         }) => {
-            //if url.is_some() {
-            //get_img(url.as_ref().unwrap()).expect("TODO: panic message");
-            //}
-
             match output {
                 Some(T) => encode(
                     png.as_ref().unwrap(),
