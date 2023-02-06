@@ -1,3 +1,5 @@
+#![allow(warnings)]
+
 mod args;
 mod chunk;
 mod chunk_type;
@@ -9,6 +11,7 @@ use crate::args::{Args, Commands};
 use crate::commands::*;
 use clap::error::{DefaultFormatter, Error, ErrorFormatter, ErrorKind};
 use clap::Parser;
+use reqwest::blocking::get;
 use std::path::PathBuf;
 
 fn main() {
@@ -18,12 +21,19 @@ fn main() {
 
     let output: Option<&PathBuf> = None;
 
+    let url: Option<String> = None;
+
     match &cli.command {
         Some(Commands::Encode {
             png,
             secret_msg,
+            url,
             output,
         }) => {
+            //if url.is_some() {
+                //get_img(url.as_ref().unwrap()).expect("TODO: panic message");
+            //}
+
             match output {
                 Some(T) => encode(
                     png.as_ref().unwrap(),

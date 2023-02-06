@@ -17,6 +17,9 @@ pub struct Args {
     /// Sets the chunk type to use
     #[arg(short, long, value_name = "CHUNK_TYPE")]
     pub chunk_type: Option<String>,
+
+    #[arg(short, long, value_name = "URL")]
+    pub url: Option<String>,
 }
 
 #[derive(Subcommand)]
@@ -31,6 +34,10 @@ pub enum Commands {
         /// Secret message to encode within the png
         #[arg(index = 2, value_name = "SECRET_MSG")]
         secret_msg: Option<String>,
+
+        /// internet url as png source
+        #[arg(short, long, value_name = "URL")]
+        url: Option<String>,
 
         /// Output png
         #[arg(short, long, value_name = "output")]

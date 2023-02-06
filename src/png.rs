@@ -1,3 +1,4 @@
+use reqwest::IntoUrl;
 use std::convert::TryFrom;
 use std::fmt;
 use std::fs;

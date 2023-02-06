@@ -1,4 +1,6 @@
+use reqwest::{Error, IntoUrl, Response};
 use std::io::Write;
+use std::io::{BufReader, Read};
 use std::path::Path;
 use std::str::FromStr;
 
@@ -6,6 +8,9 @@ use crate::chunk::Chunk;
 use crate::chunk_type::ChunkType;
 use crate::error::{ChunkError, PngError};
 use crate::png::Png;
+
+use reqwest::Client;
+use std::fs::File;
 
 pub fn encode<S, T>(input: S, output: T, chunk_type: &str, secret_msg: &str) -> Result<(), PngError>
 where
@@ -46,4 +51,22 @@ pub fn remove<S: AsRef<Path>>(input: S, chunk_type: &str) -> Result<(), PngError
     println!("Chunk removed");
 
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::fs;
+
+    #[test]
+    fn encode_decode() {
+        let input = "png_tests/good_normal_tiny-rgb-gray.png";
+        let output = "png_tests/test.png";
+        let chunk_type = "test";
+        let secret_msg = "Hello world!";
+
+        encode(input, output, chunk_type, secret_msg).unwrap();
+        let msg = decode(output, chunk_type).unwrap();
+        assert_eq!(msg, secret_msg);
+    }
 }
