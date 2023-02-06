@@ -53,6 +53,16 @@ pub fn remove<S: AsRef<Path>>(input: S, chunk_type: &str) -> Result<(), PngError
     Ok(())
 }
 
+pub async fn get_img<S: IntoUrl>(url: S) -> Result<Response, Error> {
+    let client = Client::new();
+    let mut resp = client.get(url).send().await;
+    let mut buf = Vec::new();
+    resp.copy_to(&mut buf).unwrap();
+    let mut file = File::create("test.png").unwrap();
+    file.write_all(&buf).unwrap();
+    Ok(resp)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -67,6 +77,30 @@ mod tests {
 
         encode(input, output, chunk_type, secret_msg).unwrap();
         let msg = decode(output, chunk_type).unwrap();
+
         assert_eq!(msg, secret_msg);
+
+        remove(output, chunk_type).unwrap();
+    }
+
+    #[test]
+    fn encode_decode_with_url() {
+        let url =
+            "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png";
+        let output = "png_tests/test.png";
+        let chunk_type = "test";
+        let secret_msg = "Hello world!";
+
+        get_img(url)
+            .unwrap()
+            .copy_to(&mut File::create(output).unwrap())
+            .unwrap();
+
+        encode(output, output, chunk_type, secret_msg).unwrap();
+        let msg = decode(output, chunk_type).unwrap();
+
+        assert_eq!(msg, secret_msg);
+
+        remove(output, chunk_type).unwrap();
     }
 }

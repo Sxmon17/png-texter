@@ -31,7 +31,7 @@ fn main() {
             output,
         }) => {
             //if url.is_some() {
-                //get_img(url.as_ref().unwrap()).expect("TODO: panic message");
+            //get_img(url.as_ref().unwrap()).expect("TODO: panic message");
             //}
 
             match output {
