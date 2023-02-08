@@ -1,4 +1,4 @@
-use reqwest::{Error, IntoUrl, Response};
+use reqwest::{Error, IntoUrl, Response, Url};
 use std::io::Write;
 use std::io::{BufReader, Read};
 use std::path::Path;
@@ -53,15 +53,16 @@ pub fn remove<S: AsRef<Path>>(input: S, chunk_type: &str) -> Result<(), PngError
     Ok(())
 }
 
-pub async fn get_img<S: IntoUrl>(url: S) -> Result<Response, Error> {
+/*pub fn get_img<S: IntoUrl>(url: S) -> Result<Png, PngError> {
     let client = Client::new();
-    let mut resp = client.get(url).send().await;
+    let mut response = client.get(url).send().unwrap();
+
     let mut buf = Vec::new();
-    resp.copy_to(&mut buf).unwrap();
-    let mut file = File::create("test.png").unwrap();
-    file.write_all(&buf).unwrap();
-    Ok(resp)
-}
+    response.copy_to(&mut buf).unwrap();
+
+    let png = Png::from_bytes(&buf).unwrap();
+    Ok(png)
+}*/
 
 #[cfg(test)]
 mod tests {
@@ -75,7 +76,7 @@ mod tests {
         let chunk_type = "test";
         let secret_msg = "Hello world!";
 
-        encode(input, output, chunk_type, secret_msg).unwrap();
+        encode(input, output, chunk_type, secret_msg)?;
         let msg = decode(output, chunk_type).unwrap();
 
         assert_eq!(msg, secret_msg);
@@ -83,7 +84,7 @@ mod tests {
         remove(output, chunk_type).unwrap();
     }
 
-    #[test]
+    /*#[test]
     fn encode_decode_with_url() {
         let url =
             "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png";
@@ -91,16 +92,13 @@ mod tests {
         let chunk_type = "test";
         let secret_msg = "Hello world!";
 
-        get_img(url)
-            .unwrap()
-            .copy_to(&mut File::create(output).unwrap())
-            .unwrap();
+        dbg!(get_img(url).unwrap());
 
-        encode(output, output, chunk_type, secret_msg).unwrap();
+        encode(output, output, chunk_type, secret_msg)?;
         let msg = decode(output, chunk_type).unwrap();
 
         assert_eq!(msg, secret_msg);
 
-        remove(output, chunk_type).unwrap();
-    }
+        remove(output, chunk_type)?;
+    }*/
 }
