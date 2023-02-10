@@ -14,7 +14,6 @@ use crate::commands::*;
 use ansi_term::Colour;
 use clap::error::{DefaultFormatter, Error, ErrorFormatter, ErrorKind};
 use clap::Parser;
-use reqwest::blocking::get;
 use std::path::PathBuf;
 
 fn main() {
@@ -42,11 +41,7 @@ fn main() {
                     .as_str(),
             );
 
-            println!(
-                "{} {}",
-                Colour::Green.paint("Encoded successfully with message:\n"),
-                secret_msg.as_ref().unwrap()
-            );
+            println!("{}", Colour::Green.paint("Encoded successfully"),);
         }
         Some(Commands::Decode { png }) => {
             let msg = decode(png.as_ref().unwrap(), chunk_type.unwrap());
