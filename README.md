@@ -76,8 +76,8 @@ Options:
 
 ## Examples 🔬
 
-![image](https://user-images.githubusercontent.com/65186979/216777155-6683d182-97c2-45d5-8635-0ea5d19a815f.png)
 
+![image](https://user-images.githubusercontent.com/65186979/218119450-3970c6d7-b7ac-4908-be7b-6490e560ce04.png)
 
 
 ### Encode
