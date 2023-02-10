@@ -58,16 +58,6 @@ fn main() {
         Some(Commands::Remove { png }) => {
             remove(png.as_ref().unwrap(), chunk_type.unwrap()).unwrap();
         }
-        Some(Commands::Example { png }) => {
-            encode(
-                "png_tests/good_normal_tiny-rgb-gray.png",
-                png.as_ref().unwrap(),
-                chunk_type.unwrap(),
-                "Hello World!",
-            )
-            .expect("Error while encoding");
-            println!("Encoded successfully")
-        }
         None => {
             println!("No subcommand was used");
         }

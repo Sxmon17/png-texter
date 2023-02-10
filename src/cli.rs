@@ -48,11 +48,4 @@ pub enum Commands {
         #[arg(index = 1, value_name = "FILE")]
         png: Option<PathBuf>,
     },
-
-    /// create an encrypted example png
-    Example {
-        /// output png
-        #[arg(index = 1, value_name = "FILE")]
-        png: Option<PathBuf>,
-    },
 }
