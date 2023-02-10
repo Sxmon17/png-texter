@@ -11,9 +11,11 @@ description = "A simple png chunk message encoder/decoder"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+ansi_term = "0.12.1"
 anyhow = "1.0.68"
 byteorder = "1.4.3"
 clap = { version = "4.1.4", features = ["derive"] }
+colour = "0.6.0"
 crc = "3.0.0"
 reqwest = { version = "0.11.14", features = ["blocking"] }
 thiserror = "1.0.38"
