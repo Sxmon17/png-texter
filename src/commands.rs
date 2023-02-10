@@ -65,7 +65,7 @@ mod tests {
         let chunk_type = "test";
         let secret_msg = "Hello world!";
 
-        encode(input, output, chunk_type, secret_msg)?;
+        encode(input, output, chunk_type, secret_msg).unwrap();
         let msg = decode(output, chunk_type).unwrap();
 
         assert_eq!(msg, secret_msg);

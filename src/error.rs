@@ -34,7 +34,4 @@ pub enum PngError {
 
     #[error(transparent)]
     Utf8(#[from] std::str::Utf8Error),
-
-    #[error(transparent)]
-    InvalidPng(#[from] reqwest::Error),
 }
