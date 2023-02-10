@@ -1,7 +1,7 @@
 [package]
 
 name = "png-texter"
-version = "1.5.0-beta"
+version = "1.9.0-release"
 authors = ["Simon Guglberger <simonguglberger@gmail.com>"]
 edition = "2021"
 license = "MIT"

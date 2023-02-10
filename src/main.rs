@@ -26,7 +26,6 @@ fn main() {
         Some(Commands::Encode {
             png,
             secret_msg,
-            url,
             output,
         }) => {
             let output_path = if output.is_none() { png } else { output };
@@ -45,17 +44,21 @@ fn main() {
 
             println!(
                 "{} {}",
-                Colour::Green.paint("Encoded successfully with message: "),
+                Colour::Green.paint("Encoded successfully with message:\n"),
                 secret_msg.as_ref().unwrap()
             );
         }
         Some(Commands::Decode { png }) => {
             let msg = decode(png.as_ref().unwrap(), chunk_type.unwrap());
             if msg.is_err() {
-                println!("No chunk found");
+                println!("{} No secret message found", Colour::Red.paint("Error:"));
                 return;
             }
-            println!("Decoded successfully with message: {}", msg.unwrap());
+            println!(
+                "{} {}",
+                Colour::Green.paint("Decoded successfully with message:\n"),
+                msg.unwrap()
+            );
         }
         Some(Commands::Remove { png }) => {
             remove(png.as_ref().unwrap(), chunk_type.unwrap()).unwrap();

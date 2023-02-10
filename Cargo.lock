@@ -695,7 +695,7 @@ checksum = "6ac9a59f73473f1b8d852421e59e64809f025994837ef743615c6d0c5b305160"
 
 [[package]]
 name = "png-texter"
-version = "1.5.0-beta"
+version = "1.9.0-release"
 dependencies = [
  "ansi_term",
  "anyhow",
