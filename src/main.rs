@@ -31,9 +31,6 @@ fn main() {
         }) => {
             let mut output_path = png;
             if url.as_ref().is_some() {
-                //if output.is_none() {
-                //    panic!("no output path specified")
-                //}
                 encode_from_url(
                     url.as_ref().unwrap(),
                     output_path.as_ref().unwrap(),
