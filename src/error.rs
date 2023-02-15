@@ -21,7 +21,10 @@ pub enum ChunkError {
 #[derive(Error, Debug)]
 pub enum PngError {
     #[error("invalid PNG signature (expected {expected:?}, found {found:?})")]
-    InvalidSignature { expected: String, found: String },
+    InvalidSignature {
+        expected: Box<[u8]>,
+        found: Box<[u8]>,
+    },
 
     #[error(transparent)]
     Io(#[from] std::io::Error),

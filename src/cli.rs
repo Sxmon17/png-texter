@@ -32,6 +32,10 @@ pub enum Commands {
         /// Output png
         #[arg(short, long, value_name = "output")]
         output: Option<PathBuf>,
+
+        /// source from url
+        #[arg(short, long, value_name = "url")]
+        url: Option<String>,
     },
 
     #[command(arg_required_else_help = true)]

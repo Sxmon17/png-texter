@@ -24,7 +24,7 @@ where
         secret_msg.as_bytes().to_vec(),
     ));
 
-    let mut file = std::fs::File::create(output).unwrap();
+    let mut file = File::create(output).unwrap();
     file.write_all(&png.as_bytes())?;
     Ok(())
 }
@@ -50,6 +50,23 @@ pub fn remove<S: AsRef<Path>>(input: S, chunk_type: &str) -> Result<(), PngError
 
     println!("Chunk removed");
 
+    Ok(())
+}
+
+pub fn encode_from_url<S: AsRef<Path>>(
+    url: &str,
+    output: S,
+    chunk_type: &str,
+    secret_msg: &str,
+) -> Result<(), PngError> {
+    let resp = attohttpc::get(url).send().unwrap();
+    let mut png = Png::try_from(&*resp.bytes().unwrap()).expect("TODO: panic message");
+    png.append_chunk(Chunk::new(
+        ChunkType::from_str(chunk_type).unwrap(),
+        secret_msg.as_bytes().to_vec(),
+    ));
+    let mut file = File::create(output).unwrap();
+    file.write_all(&png.as_bytes())?;
     Ok(())
 }
 
