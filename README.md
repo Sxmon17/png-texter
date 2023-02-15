@@ -86,21 +86,33 @@ Options:
 
 ## Examples 🔬
 
+### Path Source
 
 ![image](https://user-images.githubusercontent.com/65186979/218119450-3970c6d7-b7ac-4908-be7b-6490e560ce04.png)
 
 
-### Encode
+#### Encode
 
       ~/png-texter -c "rust" encode -o "png_tests/encoded.png"  png_tests/example.png "Hello User!"
 
-### Decode
+#### Decode
 
       ~/png-texter -c "rust" decode png_tests/encoded.png
       
-### Remove
+#### Remove
       
       ~/png-texter -c "rust" remove png_tests/encoded.png
 
+</br>
 
-#### If you find a bug or have an idea for a new feature, please open an issue or submit a pull request.
+### Url Source
+
+![image](https://user-images.githubusercontent.com/65186979/219093918-c4555974-167a-4a0a-bfce-36fd38839b3e.png)
+
+#### Encode from url
+
+      ~/png-texter encode -u "https://www.fnordware.com/superpng/pnggrad8rgb.png" png_tests/url_encoded.png "Hello User :)"
+      
+</br>
+
+##### If you find a bug or have an idea for a new feature, please open an issue or submit a pull request.
