@@ -1,6 +1,16 @@
 # png-texter
 A CLI tool to hide encrypted messages in a .png file written in rust
-   
+</br>
+## 💎 Features
+- [x] Png chunk editor
+- [x] Url as input source
+- [x] Custom chunk type (password to decode)
+- [x] Rich and colorful Cli
+- [ ] Gui
+- [ ] Web Interface
+- [ ] Chunk Viewer
+- [ ] Interface to send pngs over network
+
 ## 👾 Usage 
 <details>
 <summary> 🐧 Linux </summary>
