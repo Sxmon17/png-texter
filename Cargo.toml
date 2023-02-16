@@ -18,6 +18,4 @@ byteorder = "1.4.3"
 clap = { version = "4.1.4", features = ["derive"] }
 colour = "0.6.0"
 crc = "3.0.0"
-reqwest = { version = "0.11.14", features = ["blocking"] }
 thiserror = "1.0.38"
-tokio = "1.25.0"

@@ -1,4 +1,4 @@
-#![allow(warnings)]
+#![allow(dead_code)]
 
 extern crate core;
 
@@ -12,10 +12,7 @@ mod png;
 use crate::cli::{Cli, Commands};
 use crate::commands::*;
 use ansi_term::Colour;
-use clap::error::{DefaultFormatter, Error, ErrorFormatter, ErrorKind};
 use clap::Parser;
-use std::io::Write;
-use std::path::PathBuf;
 
 fn main() {
     let cli = Cli::parse();

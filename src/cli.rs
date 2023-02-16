@@ -1,9 +1,6 @@
 use std::path::PathBuf;
 
-use crate::commands::{decode, encode, remove};
 use clap::{Parser, Subcommand};
-
-use clap::error::{DefaultFormatter, Error, ErrorFormatter, ErrorKind};
 
 #[derive(Parser)]
 #[clap(author, version, about)]

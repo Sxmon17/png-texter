@@ -1,6 +1,4 @@
-use reqwest::{Error, IntoUrl, Response, Url};
 use std::io::Write;
-use std::io::{BufReader, Read};
 use std::path::Path;
 use std::str::FromStr;
 
@@ -9,7 +7,6 @@ use crate::chunk_type::ChunkType;
 use crate::error::{ChunkError, PngError};
 use crate::png::Png;
 
-use reqwest::Client;
 use std::fs::File;
 
 pub fn encode<S, T>(input: S, output: T, chunk_type: &str, secret_msg: &str) -> Result<(), PngError>
@@ -30,7 +27,7 @@ where
 }
 
 pub fn decode<S: AsRef<Path>>(input: S, chunk_type: &str) -> Result<String, PngError> {
-    let mut png = Png::from_file(input.as_ref()).expect("Png invalid");
+    let png = Png::from_file(input.as_ref()).expect("Png invalid");
     let chunk = png.chunk_by_type(chunk_type);
 
     if chunk.is_none() {
@@ -73,7 +70,6 @@ pub fn encode_from_url<S: AsRef<Path>>(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::fs;
 
     #[test]
     fn encode_decode() {
