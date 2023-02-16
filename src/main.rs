@@ -8,11 +8,14 @@ mod cli;
 mod commands;
 mod error;
 mod png;
+mod gui;
 
 use crate::cli::{Cli, Commands};
 use crate::commands::*;
 use ansi_term::Colour;
 use clap::Parser;
+use iced::{Application, Settings, window};
+use crate::gui::Counter;
 
 fn main() {
     let cli = Cli::parse();
@@ -61,6 +64,10 @@ fn main() {
         }
         Some(Commands::Remove { png }) => {
             remove(png.as_ref().unwrap(), chunk_type.unwrap()).unwrap();
+        }
+        Some(Commands::Gui) => {
+            println!("Launching GUI...");
+            Counter::run(Settings::default()).expect("TODO: panic message");
         }
         None => {
             println!("No subcommand was used");

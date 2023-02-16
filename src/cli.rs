@@ -49,4 +49,7 @@ pub enum Commands {
         #[arg(index = 1, value_name = "FILE")]
         png: Option<PathBuf>,
     },
+
+    /// Launch the GUI
+    Gui,
 }
