@@ -17,32 +17,30 @@ where
     let mut png = Png::from_file(input.as_ref())?;
 
     png.append_chunk(Chunk::new(
-        ChunkType::from_str(chunk_type).unwrap(),
+        ChunkType::from_str(chunk_type)?,
         secret_msg.as_bytes().to_vec(),
     ));
 
-    let mut file = File::create(output).unwrap();
+    let mut file = File::create(output)?;
     file.write_all(&png.as_bytes())?;
     Ok(())
 }
 
 pub fn decode<S: AsRef<Path>>(input: S, chunk_type: &str) -> Result<String, PngError> {
-    let png = Png::from_file(input.as_ref()).expect("Png invalid");
-    let chunk = png.chunk_by_type(chunk_type);
-
-    if chunk.is_none() {
-        return Err(ChunkError::ChunkNotFound(chunk_type.to_string()).into());
-    }
-
-    let msg = String::from_utf8(chunk.unwrap().data.clone()).unwrap();
+    let png = Png::from_file(input.as_ref())?;
+    let chunk = png
+        .chunk_by_type(chunk_type)
+        .ok_or(ChunkError::ChunkNotFound(chunk_type.to_string()))?;
+    let msg = String::from_utf8(chunk.data.clone()).map_err(|e| PngError::FromUtf8(e))?;
 
     Ok(msg)
 }
 
 pub fn remove<S: AsRef<Path>>(input: S, chunk_type: &str) -> Result<(), PngError> {
-    let mut png = Png::from_file(input.as_ref()).expect("Png invalid");
-    png.remove_chunk(chunk_type).expect("Failed removing chunk");
-    let mut file = std::fs::File::create(input)?;
+    let mut png = Png::from_file(input.as_ref())?;
+    png.remove_chunk(chunk_type)
+        .map_err(|e| PngError::Chunk(e))?;
+    let mut file = File::create(input)?;
     file.write_all(&png.as_bytes())?;
 
     println!("Chunk removed");
@@ -56,13 +54,13 @@ pub fn encode_from_url<S: AsRef<Path>>(
     chunk_type: &str,
     secret_msg: &str,
 ) -> Result<(), PngError> {
-    let resp = attohttpc::get(url).send().unwrap();
-    let mut png = Png::try_from(&*resp.bytes().unwrap()).expect("TODO: panic message");
+    let resp = attohttpc::get(url).send().map_err(|e| PngError::Http(e))?;
+    let mut png = Png::try_from(&*resp.bytes().unwrap())?;
     png.append_chunk(Chunk::new(
-        ChunkType::from_str(chunk_type).unwrap(),
+        ChunkType::from_str(chunk_type)?,
         secret_msg.as_bytes().to_vec(),
     ));
-    let mut file = File::create(output).unwrap();
+    let mut file = File::create(output)?;
     file.write_all(&png.as_bytes())?;
     Ok(())
 }

@@ -34,12 +34,7 @@ fn main() {
                     chunk_type.unwrap(),
                     secret_msg.as_ref().unwrap(),
                 )
-                .expect(
-                    Colour::Red
-                        .paint("Error while encoding")
-                        .to_string()
-                        .as_str(),
-                );
+                .expect("Failed to encode from url");
             } else {
                 output_path = if output.is_none() { png } else { output };
                 encode(
@@ -48,12 +43,7 @@ fn main() {
                     chunk_type.unwrap(),
                     secret_msg.as_ref().unwrap(),
                 )
-                .expect(
-                    Colour::Red
-                        .paint("Error while encoding")
-                        .to_string()
-                        .as_str(),
-                );
+                .expect("Failed to encode");
             };
             println!("{}", Colour::Green.paint("Encoded successfully"));
         }
