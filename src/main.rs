@@ -15,7 +15,7 @@ use crate::commands::*;
 use ansi_term::Colour;
 use clap::Parser;
 use iced::{Application, Settings, window};
-use crate::gui::Counter;
+use crate::gui::Gui;
 
 fn main() {
     let cli = Cli::parse();
@@ -67,7 +67,7 @@ fn main() {
         }
         Some(Commands::Gui) => {
             println!("Launching GUI...");
-            Counter::run(Settings::default()).expect("TODO: panic message");
+            Gui::run(Settings::default()).expect("TODO: panic message");
         }
         None => {
             println!("No subcommand was used");
