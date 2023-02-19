@@ -16,10 +16,14 @@ where
 {
     let mut png = Png::from_file(input.as_ref())?;
 
+    png.remove_chunk("IEND").map_err(|e| PngError::Chunk(e))?;
+
     png.append_chunk(Chunk::new(
         ChunkType::from_str(chunk_type)?,
         secret_msg.as_bytes().to_vec(),
     ));
+
+    png.append_chunk(Chunk::new(ChunkType::from_str("IEND")?, vec![]));
 
     let mut file = File::create(output)?;
     file.write_all(&png.as_bytes())?;
