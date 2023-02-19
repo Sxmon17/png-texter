@@ -7,15 +7,15 @@ mod chunk_type;
 mod cli;
 mod commands;
 mod error;
-mod png;
 mod gui;
+mod png;
 
 use crate::cli::{Cli, Commands};
 use crate::commands::*;
+use crate::gui::Gui;
 use ansi_term::Colour;
 use clap::Parser;
-use iced::{Application, Settings, window};
-use crate::gui::Gui;
+use iced::{window, Application, Settings};
 
 fn main() {
     let cli = Cli::parse();

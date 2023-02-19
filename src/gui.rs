@@ -1,11 +1,10 @@
-use iced::theme::{self, Theme};
+use crate::commands::encode_from_url;
+use iced::theme::Theme;
 use iced::widget::{
-    button, checkbox, column, container, horizontal_rule, progress_bar, radio,
-    row, scrollable, slider, text, text_input, toggler, vertical_rule,
-    vertical_space,
+    button, checkbox, column, container, horizontal_rule, progress_bar, radio, row, scrollable,
+    slider, text, text_input, toggler, vertical_rule, vertical_space,
 };
 use iced::{Alignment, Color, Element, Length, Sandbox, Settings};
-use crate::commands::encode_from_url;
 
 pub fn main() -> iced::Result {
     Gui::run(Settings::default())
@@ -14,13 +13,15 @@ pub fn main() -> iced::Result {
 #[derive(Default)]
 pub struct Gui {
     theme: Theme,
-    input_value: String,
+    url: String,
+    msg: String,
 }
 
 #[derive(Debug, Clone)]
 pub enum Message {
-    InputChanged(String),
-    ButtonPressed,
+    UrlChanged(String),
+    MsgChanged(String),
+    EncodePressed,
 }
 
 impl Sandbox for Gui {
@@ -36,36 +37,30 @@ impl Sandbox for Gui {
 
     fn update(&mut self, message: Message) {
         match message {
-            Message::InputChanged(value) => self.input_value = value,
-            Message::ButtonPressed => {
-                encode_from_url(
-                    &self.input_value,
-                    "png_tests/guitest.png",
-                    "rust",
-                    "Hello world!",
-                ).expect("Failed to encode from url");
+            Message::UrlChanged(value) => self.url = value,
+            Message::MsgChanged(value) => self.msg = value,
+            Message::EncodePressed => {
+                encode_from_url(&self.url, "png_tests/guitest.png", "rust", &self.msg)
+                    .expect("Failed to encode from url");
                 println!("Encoded successfully");
             }
         }
     }
 
     fn view(&self) -> Element<Message> {
-        let text_input = text_input(
-            "Enter URL here...",
-            &self.input_value,
-            Message::InputChanged,
-        )
+        let url_input = text_input("Enter URL here...", &self.url, Message::UrlChanged)
             .padding(10)
             .size(20);
 
-        let button = button("Submit")
+        let msg_input = text_input("Enter message here...", &self.msg, Message::MsgChanged)
             .padding(10)
-            .on_press(Message::ButtonPressed);
+            .size(20);
 
-        let content = column![
-            row![text_input, button].spacing(10),
-            horizontal_rule(38)
-        ]
+        let button = button("Encode")
+            .padding(10)
+            .on_press(Message::EncodePressed);
+
+        let content = column![url_input, msg_input, button]
             .spacing(20)
             .padding(20)
             .max_width(600);
