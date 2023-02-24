@@ -118,4 +118,10 @@ Options:
       
 </br>
 
+## 📝 License
+
+Copyright © 2023 [Simon Guglberger](https://github.com/sxmon17).<br />
+This project is [MIT](https://github.com/Sxmon17/png-texter/blob/main/LICENSE.md) licensed.
+
+
 ##### If you find a bug or have an idea for a new feature, please open an issue or submit a pull request.
