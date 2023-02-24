@@ -45,7 +45,6 @@ Commands:
   encode  encode the png with a secret message
   decode  decode the png to get the secret message
   remove  remove the chunk from the png
-  gui     Launch the GUI
   help    Print this message or the help of the given subcommand(s)
 
 Options:
@@ -70,20 +69,6 @@ Options:
   -o, --output <output>  Output png
   -u, --url <url>        source from url
   -h, --help             Print help
-
-```
-
-## ~/png-texter help decode
-```
-decode the png to get the secret message
-
-Usage: png-texter decode [FILE]
-
-Arguments:
-  [FILE]  Png to decode
-
-Options:
-  -h, --help  Print help
 
 ```
 
