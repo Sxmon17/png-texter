@@ -74,8 +74,6 @@ impl TryFrom<&[u8]> for Png {
     fn try_from(bytes: &[u8]) -> Result<Png, PngError> {
         if bytes[0..8] != Png::STANDARD_HEADER {
             return Err(PngError::InvalidSignature {
-                //expected: String::from_utf8_lossy(&Png::STANDARD_HEADER).to_string(),
-                //found: String::from_utf8_lossy(&bytes[0..8]).to_string(),
                 expected: Box::from(&Png::STANDARD_HEADER[..]),
                 found: Box::from(&bytes[0..8]),
             });
