@@ -1,5 +1,6 @@
 # png-texter
-A CLI tool to hide encrypted messages in a .png file written in rust
+A CLI tool to hide encrypted messages in a .png file written in rust. </br>
+Idea and Codestructure from [pngme_book](https://picklenerd.github.io/pngme_book/)
 </br>
 ## 💎 Features
 - [x] Png chunk editor
